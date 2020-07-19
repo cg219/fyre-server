@@ -11,6 +11,7 @@ const app = new Koa();
 const router = new KoaRouter();
 const errorResponse = (ctx, error) => ctx.body = { status: 400, message: error.message };
 const api = axios.create({ baseURL: process.env.API_URL });
+const test = axios.create({ baseURL: process.env.SCRAPE_URL });
 
 router.get("/api/:symbol", async ctx => {
     try {
@@ -23,6 +24,14 @@ router.get("/api/:symbol", async ctx => {
         }
     } catch (error) {
         errorResponse(ctx, error);
+    }
+})
+
+router.get("/apitest/:symbol", async ctx => {
+    try {
+
+    } catch (error) {
+        errorResponse(ctx, error)
     }
 })
 
