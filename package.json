@@ -8,7 +8,7 @@
     "start": "node ./index.js",
     "start:updater": "node ./updater.js",
     "dev": "nodemon -r dotenv/config ./index.js --watch",
-    "dev:updater": "nodemon -r dotenv/config ./updater/index.js --watch"
+    "dev:updater": "nodemon -r dotenv/config ./updater.js --watch"
   },
   "repository": {
     "type": "git",

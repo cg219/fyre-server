@@ -10,8 +10,10 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
-      - name: Update app.yaml
-        uses: ikuanyshbekov/app-yaml-env-compiler@v1.0
+      - name: Update YAML Files
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: "app.yaml, updater.yaml"
         env:
           API_URL: ${{ secrets.API_URL }}
           COIN_URL: ${{ secrets.COIN_URL }}
