@@ -18,7 +18,7 @@ cron.schedule(credentials.SCHEDULE, async () => {
 
             await store(firestore, stock.symbol, newPrice, "stocks");
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
     })
 })
@@ -36,7 +36,7 @@ cron.schedule("30 * * * * *", async () => {
 
             await store(firestore, crypto.symbol, newPrice, "cryptos");
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
     })
 })
