@@ -4,34 +4,43 @@ const KoaRouter = require("@koa/router");
 const KoaBody = require("koa-bodyparser");
 const KoaJSON = require("koa-json");
 const axios = require("axios");
-const { database: firestore, checkStore, fetchStock, store } = require("./methods");
+const { database: firestore, checkStore, fetchCrypto, fetchStock, store } = require("./methods");
 const PORT = credentials.PORT;
 const app = new Koa();
 const router = new KoaRouter();
 const errorResponse = (ctx, error) => ctx.body = { status: 400, message: error.message };
-const api = axios.create({ baseURL: process.env.API_URL });
+const stockAPI = axios.create({ baseURL: process.env.API_URL });
+const coinAPI = axios.create({ baseURL: process.env.COIN_URL });
 
-router.get("/api/:symbol", async ctx => {
+const handleReq = async (api, collection, fetch, context) => {
     try {
-        const symbol = ctx.params.symbol;
-        const stock = await checkStore(firestore, symbol);
+        const symbol = context.params.symbol;
+        const asset = await checkStore(firestore, symbol, collection);
         let price;
         let shouldStore = true
         let didStore;
 
-        if (stock.price) {
-            price = stock.price;
+        if (asset.price) {
+            price = asset.price;
             shouldStore = false;
         } else {
-            price = await fetchStock(api, symbol);
+            price = await fetch(api, symbol);
         }
 
-        ctx.body = { status: 200, data: { symbol, price }};
+        context.body = { status: 200, data: { symbol, price }};
 
-        if (shouldStore) { store(firestore, symbol, price) }
+        if (shouldStore) { store(firestore, symbol, price, collection) }
     } catch (error) {
-        errorResponse(ctx, error);
+        errorResponse(context, error);
     }
+}
+
+router.get("/api/stock/:symbol", async ctx => {
+    await handleReq(stockAPI, "stocks", fetchStock, ctx);
+})
+
+router.get("/api/crypto/:symbol", async ctx => {
+    await handleReq(coinAPI, "cryptos", fetchCrypto, ctx);
 })
 
 app

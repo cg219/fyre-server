@@ -12,12 +12,12 @@ const database = () => {
     return admin.firestore();
 }
 
-const checkStore = async (db, symbol) => {
+const checkStore = async (db, symbol, collection = "stocks") => {
     try {
-        const stock = await db.collection("stocks").doc(symbol).get();
+        const asset = await db.collection(collection).doc(symbol).get();
 
-        if (stock.exists) {
-            return stock.data();
+        if (asset.exists) {
+            return asset.data();
         }
 
         return {}
@@ -31,7 +31,7 @@ const fetchStock = async (api, symbol) => {
     try {
         let { data } = await api.get(`${symbol.toUpperCase()}`);
         let c = cheerio.load(data);
-        let unrefinedPrice = c(".quoteData ").find(".upDn").text();
+        let unrefinedPrice = c(".quoteData").find(".upDn").text();
         let priceCheck = /([0-9\.\,]+)/
         let refinedPrice = unrefinedPrice.replace(priceCheck, "$1").replace(",", "");
 
@@ -42,15 +42,30 @@ const fetchStock = async (api, symbol) => {
     }
 }
 
-const store = async (db, symbol, price) => {
+const fetchCrypto = async (api, symbol) => {
     try {
-        const stock = {
+        let { data } = await api.get(`${symbol}`);
+        let c = cheerio.load(data);
+        let unrefinedPrice = c(".cmc-details-panel-price__price").text();
+        let priceCheck = /\D?([0-9\.\,]+)/
+        let refinedPrice = unrefinedPrice.replace(priceCheck, "$1").replace(",", "");
+
+        return Number(refinedPrice);
+    } catch (error) {
+        console.error(error);
+        throw Error("Crypto Not Found");
+    }
+}
+
+const store = async (db, symbol, price, collection = "stocks") => {
+    try {
+        const asset = {
             symbol,
             price,
             date: Date.now()
         }
 
-        await db.collection("stocks").doc(symbol).set(stock);
+        await db.collection(collection).doc(symbol).set(asset);
 
         return true
     } catch (error) {
@@ -59,4 +74,4 @@ const store = async (db, symbol, price) => {
     }
 }
 
-module.exports = { database: database(), checkStore, fetchStock, store }
+module.exports = { database: database(), checkStore, fetchStock, fetchCrypto, store }
