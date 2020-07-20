@@ -17,17 +17,17 @@ jobs:
           COIN_URL: ${{ secrets.COIN_URL }}
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           SCHEDULE: ${{ secrets.SCHEDULE }}
-      - name: Deploy to App Engine
+      - name: Deploy to Default Service App Engine
         uses: actions-hub/gcloud@master
         env:
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-          APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
         with:
           args: app deploy app.yaml
-      - name: Deploy to App Engine
+      - name: Deploy to Updater Service App Engine
         uses: actions-hub/gcloud@master
         env:
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-          APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
         with:
           args: app deploy updater/app.yaml
