@@ -1,5 +1,6 @@
 runtime: nodejs10
 service: updater
+entrypoint: npm run start:updater
 env_variables:
   API_URL: $API_URL
   COIN_URL: $COIN_URL
