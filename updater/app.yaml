@@ -1,5 +1,5 @@
 runtime: nodejs10
-service: default
+service: updater
 env_variables:
   API_URL: $API_URL
   COIN_URL: $COIN_URL

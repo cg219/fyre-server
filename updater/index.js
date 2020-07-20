@@ -1,7 +1,7 @@
-const credentials = require("./credentials");
+const credentials = require("./../credentials");
 const cron = require("node-cron");
 const axios = require("axios");
-const { database: firestore, fetchStock, fetchCrypto, store } = require("./methods");
+const { database: firestore, fetchStock, fetchCrypto, store } = require("./../methods");
 const stocksAPI = axios.create({ baseURL: process.env.API_URL });
 const coinAPI = axios.create({ baseURL: process.env.COIN_URL });
 

@@ -1,0 +1,33 @@
+name: Deploy to App Engine
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Update app.yaml
+        uses: ikuanyshbekov/app-yaml-env-compiler@v1.0
+        env:
+          API_URL: ${{ secrets.API_URL }}
+          COIN_URL: ${{ secrets.COIN_URL }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          SCHEDULE: ${{ secrets.SCHEDULE }}
+      - name: Deploy to App Engine
+        uses: actions-hub/gcloud@master
+        env:
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        with:
+          args: app deploy app.yaml
+      - name: Deploy to App Engine
+        uses: actions-hub/gcloud@master
+        env:
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        with:
+          args: app deploy updater/app.yaml
