@@ -1,2 +1,2 @@
 # fyre-server
-Server for Fyre App
+Server for Fyre App!
