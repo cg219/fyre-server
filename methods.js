@@ -29,10 +29,10 @@ const checkStore = async (db, symbol) => {
 
 const fetchStock = async (api, symbol) => {
     try {
-        let { data } = await api.get(`${symbol}/`);
+        let { data } = await api.get(`${symbol.toUpperCase()}`);
         let c = cheerio.load(data);
-        let unrefinedPrice = c(".current-price").text();
-        let priceCheck = /([0-9\.\,]+).+/
+        let unrefinedPrice = c(".quoteData ").find(".upDn").text();
+        let priceCheck = /([0-9\.\,]+)/
         let refinedPrice = unrefinedPrice.replace(priceCheck, "$1").replace(",", "");
 
         return Number(refinedPrice);
